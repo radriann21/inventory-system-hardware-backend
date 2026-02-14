@@ -3,6 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { UsersModule } from './users/users.module';
+import { ProductsModule } from './products/products.module';
+import { ProvidersModule } from './providers/providers.module';
+import { StockModule } from './stock/stock.module';
+import { RatesModule } from './rates/rates.module';
 
 @Module({
   imports: [
@@ -21,6 +26,11 @@ import { SequelizeModule } from '@nestjs/sequelize';
         synchronize: false,
       }),
     }),
+    UsersModule,
+    ProductsModule,
+    ProvidersModule,
+    StockModule,
+    RatesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
