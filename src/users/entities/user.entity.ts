@@ -8,7 +8,7 @@ import { StockMovements } from '../../stock/entities/stock.entity';
 export class User extends Model {
   @Column({
     type: DataType.UUID,
-    defaultValue: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     allowNull: false,
     primaryKey: true,
   })
@@ -37,15 +37,15 @@ export class User extends Model {
     type: DataType.STRING,
     allowNull: false,
   })
-  declare password;
+  declare password_hash: string;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  declare createdAt;
+  declare created_at: Date;
 
   @HasMany(() => StockMovements)
-  declare stockMovements: StockMovements[];
+  declare stock_movements: StockMovements[];
 }

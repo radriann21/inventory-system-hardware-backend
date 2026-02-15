@@ -4,6 +4,7 @@ import {
   DataType,
   Model,
   BelongsTo,
+  ForeignKey,
 } from 'sequelize-typescript';
 import { Product } from '../../products/entities/product.entity';
 import { User } from '../../users/entities/user.entity';
@@ -21,12 +22,14 @@ export class StockMovements extends Model {
   })
   declare id: string;
 
+  @ForeignKey(() => Product)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
   declare product_id: string;
 
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     allowNull: false,
