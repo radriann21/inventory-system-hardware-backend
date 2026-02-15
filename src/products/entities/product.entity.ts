@@ -5,6 +5,7 @@ import {
   Model,
   BelongsTo,
   HasMany,
+  ForeignKey,
 } from 'sequelize-typescript';
 import { Measure } from './measure.entity';
 import { StockMovements } from '../../stock/entities/stock.entity';
@@ -65,12 +66,14 @@ export class Product extends Model {
   })
   declare brand: string;
 
+  @ForeignKey(() => Measure)
   @Column({
-    type: DataType.STRING,
+    type: DataType.INTEGER,
     allowNull: false,
   })
-  declare measure_id: string;
+  declare measure_id: number;
 
+  @ForeignKey(() => Provider)
   @Column({
     type: DataType.UUID,
     allowNull: false,
