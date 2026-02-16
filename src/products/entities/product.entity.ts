@@ -18,7 +18,7 @@ import { Provider } from '../../providers/entities/provider.entity';
 export class Product extends Model {
   @Column({
     type: DataType.UUID,
-    defaultValue: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     allowNull: false,
     primaryKey: true,
   })

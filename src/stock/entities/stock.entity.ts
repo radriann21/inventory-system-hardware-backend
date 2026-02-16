@@ -16,7 +16,7 @@ import { User } from '../../users/entities/user.entity';
 export class StockMovements extends Model {
   @Column({
     type: DataType.UUID,
-    defaultValue: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     allowNull: false,
     primaryKey: true,
   })
