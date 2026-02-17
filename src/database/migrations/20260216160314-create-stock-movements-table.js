@@ -5,8 +5,8 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     return queryInterface.createTable('stock_movements', {
       id: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
         allowNull: false,
         primaryKey: true
       },
@@ -34,8 +34,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      movement_type: {
-        type: Sequelize.ENUM('ENTRY', 'EXIT', 'ADJUSTMENT'),
+      type: {
+        type: Sequelize.STRING,
         allowNull: false
       },
       description: {
