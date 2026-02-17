@@ -15,7 +15,7 @@ module.exports = {
         allowNull: false,
       },
       abbreviation: {
-        type: Sequelize.STRING,
+        type: Sequelize.CHAR(10),
         allowNull: false
       },
       is_active: {

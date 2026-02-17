@@ -15,12 +15,12 @@ import { User } from '../../users/entities/user.entity';
 })
 export class StockMovements extends Model {
   @Column({
-    type: DataType.UUID,
-    defaultValue: DataType.UUIDV4,
+    type: DataType.INTEGER,
+    autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   })
-  declare id: string;
+  declare id: number;
 
   @ForeignKey(() => Product)
   @Column({
@@ -43,10 +43,10 @@ export class StockMovements extends Model {
   declare quantity: number;
 
   @Column({
-    type: DataType.ENUM('ENTRY', 'EXIT', 'ADJUSTMENT'),
+    type: DataType.STRING,
     allowNull: false,
   })
-  declare movement_type: string;
+  declare type: string;
 
   @Column({
     type: DataType.STRING,
