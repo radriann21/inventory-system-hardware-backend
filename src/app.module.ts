@@ -18,6 +18,7 @@ import { Rate } from './rates/entities/rate.entity';
 import { Provider } from './providers/entities/provider.entity';
 import { Product } from './products/entities/product.entity';
 import { Measure } from './products/entities/measure.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { Measure } from './products/entities/measure.entity';
     ProvidersModule,
     StockModule,
     RatesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

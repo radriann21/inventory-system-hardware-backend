@@ -18,20 +18,20 @@ export class User extends Model {
     type: DataType.STRING,
     allowNull: false,
   })
-  declare name;
+  declare name: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  declare lastname;
+  declare lastname: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
     unique: true,
   })
-  declare username;
+  declare username: string;
 
   @Column({
     type: DataType.STRING,

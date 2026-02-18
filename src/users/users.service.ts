@@ -55,6 +55,12 @@ export class UsersService {
     return user;
   }
 
+  async findByUsername(username: string) {
+    return await this.userModel.findOne({
+      where: { username },
+    });
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.userModel.findByPk(id, {
       attributes: { exclude: ['password_hash'] },
