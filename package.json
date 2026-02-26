@@ -23,7 +23,8 @@
     "migration:undo": "pnpx sequelize-cli db:migrate:undo",
     "seed:generate": "pnpx sequelize-cli seed:generate --name",
     "seed:run": "pnpx sequelize-cli db:seed:all",
-    "seed:revert": "pnpx sequelize-cli db:seed:undo"
+    "seed:revert": "pnpx sequelize-cli db:seed:undo",
+    "seed:revert:all": "pnpx sequelize-cli db:seed:undo:all"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
