@@ -9,7 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { Measure } from './measure.entity';
 import { StockMovements } from '../../stock/entities/stock.entity';
-import { Provider } from '../../providers/entities/provider.entity';
+import { CatalogProvider } from './catalog-provider.entity';
 
 @Table({
   tableName: 'products',
@@ -73,19 +73,12 @@ export class Product extends Model {
   })
   declare measure_id: number;
 
-  @ForeignKey(() => Provider)
-  @Column({
-    type: DataType.UUID,
-    allowNull: false,
-  })
-  declare provider_id: string;
-
   @BelongsTo(() => Measure, 'measure_id')
   declare measure: Measure;
 
-  @BelongsTo(() => Provider, 'provider_id')
-  declare provider: Provider;
-
   @HasMany(() => StockMovements)
   declare stockMovements: StockMovements[];
+
+  @HasMany(() => CatalogProvider)
+  declare catalogProviders: CatalogProvider[];
 }

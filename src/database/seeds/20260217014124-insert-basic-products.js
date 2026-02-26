@@ -5,11 +5,6 @@ const { v4: uuidv4 } = require('uuid');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    const providers = await queryInterface.sequelize.query(
-      'SELECT id FROM providers LIMIT 10',
-      { type: Sequelize.QueryTypes.SELECT }
-    );
-
     const measures = await queryInterface.sequelize.query(
       'SELECT id, abbreviation FROM measures',
       { type: Sequelize.QueryTypes.SELECT }
@@ -19,7 +14,6 @@ module.exports = {
       const measure = measures.find(m => m.abbreviation.trim() === abbr);
       return measure?.id;
     };
-    const getRandomProvider = () => providers[Math.floor(Math.random() * providers.length)].id;
 
     await queryInterface.bulkInsert('products', [
       {
@@ -32,7 +26,7 @@ module.exports = {
         min_stock: 100,
         brand: 'Ferrotec',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -44,7 +38,7 @@ module.exports = {
         min_stock: 20,
         brand: 'Montana',
         measure_id: getMeasureId('gal'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -56,7 +50,7 @@ module.exports = {
         min_stock: 50,
         brand: 'Cemex',
         measure_id: getMeasureId('sco'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -68,7 +62,7 @@ module.exports = {
         min_stock: 50,
         brand: 'Cabel',
         measure_id: getMeasureId('m'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -80,7 +74,7 @@ module.exports = {
         min_stock: 40,
         brand: 'Pavco',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -92,7 +86,7 @@ module.exports = {
         min_stock: 10,
         brand: 'Stanley',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -104,7 +98,7 @@ module.exports = {
         min_stock: 8,
         brand: 'Yale',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -116,7 +110,7 @@ module.exports = {
         min_stock: 50,
         brand: '3M',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -128,7 +122,7 @@ module.exports = {
         min_stock: 15,
         brand: 'Stanley',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -140,7 +134,7 @@ module.exports = {
         min_stock: 20,
         brand: 'Ferrotec',
         measure_id: getMeasureId('kg'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -152,7 +146,7 @@ module.exports = {
         min_stock: 15,
         brand: 'Truper',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -164,7 +158,7 @@ module.exports = {
         min_stock: 30,
         brand: 'Sika',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -176,7 +170,7 @@ module.exports = {
         min_stock: 40,
         brand: 'Nacional',
         measure_id: getMeasureId('par'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -188,7 +182,7 @@ module.exports = {
         min_stock: 20,
         brand: 'Quimex',
         measure_id: getMeasureId('L'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -200,7 +194,7 @@ module.exports = {
         min_stock: 12,
         brand: 'Master Lock',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -212,7 +206,7 @@ module.exports = {
         min_stock: 25,
         brand: 'Condor',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -224,7 +218,7 @@ module.exports = {
         min_stock: 20,
         brand: 'Condor',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -236,7 +230,7 @@ module.exports = {
         min_stock: 15,
         brand: 'Ferrotec',
         measure_id: getMeasureId('kg'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -248,7 +242,7 @@ module.exports = {
         min_stock: 10,
         brand: 'Truper',
         measure_id: getMeasureId('und'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
       {
         id: uuidv4(),
@@ -260,7 +254,7 @@ module.exports = {
         min_stock: 50,
         brand: '3M',
         measure_id: getMeasureId('rll'),
-        provider_id: getRandomProvider(),
+        tax_percentage: 16,
       },
     ], {});
   },

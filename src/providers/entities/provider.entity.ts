@@ -1,5 +1,5 @@
 import { Table, Column, DataType, Model, HasMany } from 'sequelize-typescript';
-import { Product } from '../../products/entities/product.entity';
+import { CatalogProvider } from '../../products/entities/catalog-provider.entity';
 
 @Table({
   tableName: 'providers',
@@ -38,6 +38,6 @@ export class Provider extends Model {
   })
   declare address;
 
-  @HasMany(() => Product)
-  declare products: Product[];
+  @HasMany(() => CatalogProvider)
+  declare catalogProviders: CatalogProvider[];
 }

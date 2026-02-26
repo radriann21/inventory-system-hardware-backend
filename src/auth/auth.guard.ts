@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   CanActivate,
@@ -23,6 +22,10 @@ export class AuthGuard implements CanActivate {
 
     try {
       const payload = await this.jwtService.verifyAsync(token);
+
+      if (!payload) {
+        throw new UnauthorizedException('Token is not valid');
+      }
 
       request['user'] = payload;
     } catch {
