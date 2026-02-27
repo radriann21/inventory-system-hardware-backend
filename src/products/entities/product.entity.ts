@@ -10,6 +10,7 @@ import {
 import { Measure } from './measure.entity';
 import { StockMovements } from '../../stock/entities/stock.entity';
 import { CatalogProvider } from '../../providers/entities/catalog-provider.entity';
+import { Category } from './category.entity';
 
 @Table({
   tableName: 'products',
@@ -73,8 +74,18 @@ export class Product extends Model {
   })
   declare measure_id: number;
 
+  @ForeignKey(() => Category)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  declare category_id: number;
+
   @BelongsTo(() => Measure, 'measure_id')
   declare measure: Measure;
+
+  @BelongsTo(() => Category, 'category_id')
+  declare category: Category;
 
   @HasMany(() => StockMovements)
   declare stockMovements: StockMovements[];
