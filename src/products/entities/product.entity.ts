@@ -9,7 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { Measure } from './measure.entity';
 import { StockMovements } from '../../stock/entities/stock.entity';
-import { CatalogProvider } from './catalog-provider.entity';
+import { CatalogProvider } from '../../providers/entities/catalog-provider.entity';
 
 @Table({
   tableName: 'products',

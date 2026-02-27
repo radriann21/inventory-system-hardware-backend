@@ -1,5 +1,5 @@
 import { Table, Column, DataType, Model, HasMany } from 'sequelize-typescript';
-import { CatalogProvider } from '../../products/entities/catalog-provider.entity';
+import { CatalogProvider } from './catalog-provider.entity';
 
 @Table({
   tableName: 'providers',
