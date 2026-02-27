@@ -19,6 +19,8 @@ import { Provider } from './providers/entities/provider.entity';
 import { Product } from './products/entities/product.entity';
 import { Measure } from './products/entities/measure.entity';
 import { AuthModule } from './auth/auth.module';
+import { CatalogProvider } from './providers/entities/catalog-provider.entity';
+import { Category } from './products/entities/category.entity';
 
 @Module({
   imports: [
@@ -35,7 +37,16 @@ import { AuthModule } from './auth/auth.module';
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
         synchronize: false,
-        models: [User, StockMovements, Rate, Provider, Product, Measure],
+        models: [
+          User,
+          StockMovements,
+          Rate,
+          Provider,
+          Product,
+          Measure,
+          CatalogProvider,
+          Category,
+        ],
       }),
     }),
     UsersModule,
