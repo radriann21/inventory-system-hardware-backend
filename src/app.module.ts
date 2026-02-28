@@ -17,11 +17,12 @@ import { StockMovements } from './stock/entities/stock.entity';
 import { Rate } from './rates/entities/rate.entity';
 import { Provider } from './providers/entities/provider.entity';
 import { Product } from './products/entities/product.entity';
-import { Measure } from './products/entities/measure.entity';
+import { Measure } from './measures/entities/measure.entity';
 import { AuthModule } from './auth/auth.module';
 import { CatalogProvider } from './providers/entities/catalog-provider.entity';
 import { Category } from './categories/entities/category.entity';
 import { CategoriesModule } from './categories/categories.module';
+import { MeasuresModule } from './measures/measures.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { CategoriesModule } from './categories/categories.module';
     RatesModule,
     AuthModule,
     CategoriesModule,
+    MeasuresModule,
   ],
   controllers: [AppController],
   providers: [AppService],
