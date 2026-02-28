@@ -17,29 +17,34 @@ export class ProvidersController {
 
   @Post()
   create(@Body() createProviderDto: CreateProviderDto) {
-    return this.providersService.create(createProviderDto);
+    return this.providersService.createNewProvider(createProviderDto);
   }
 
   @Get()
   findAll() {
-    return this.providersService.findAll();
+    return this.providersService.findAllProviders();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.providersService.findOne(+id);
+  @Get('/name/:name')
+  findOne(@Param('name') name: string) {
+    return this.providersService.findOneProviderByName(name);
   }
 
-  @Patch(':id')
+  @Get('/id/:id')
+  findOneById(@Param('id') id: string) {
+    return this.providersService.findOneProviderById(id);
+  }
+
+  @Patch('/update/:id')
   update(
     @Param('id') id: string,
     @Body() updateProviderDto: UpdateProviderDto,
   ) {
-    return this.providersService.update(+id, updateProviderDto);
+    return this.providersService.updateProvider(id, updateProviderDto);
   }
 
-  @Delete(':id')
+  @Delete('/delete/:id')
   remove(@Param('id') id: string) {
-    return this.providersService.remove(+id);
+    return this.providersService.deleteProvider(id);
   }
 }
