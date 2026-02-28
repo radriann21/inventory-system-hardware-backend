@@ -63,11 +63,18 @@ export class CategoriesService {
   }
 
   async deleteCategory(id: number) {
-    const category = await Category.destroy({ where: { id } });
+    const category = await Category.findByPk(id);
+
     if (!category) {
       throw new NotFoundException('Category not found');
     }
-    return category;
+
+    try {
+      await category?.update({ is_active: false });
+      return { message: 'Category deactivated successfully' };
+    } catch {
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 
   async updateCategory(id: number, updateCategoryDto: UpdateCategoryDto) {
