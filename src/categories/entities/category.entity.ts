@@ -1,5 +1,5 @@
 import { Table, Column, DataType, Model, HasMany } from 'sequelize-typescript';
-import { Product } from './product.entity';
+import { Product } from '../../products/entities/product.entity';
 
 @Table({
   tableName: 'categories',
@@ -31,21 +31,21 @@ export class Category extends Model {
     allowNull: false,
     defaultValue: true,
   })
-  declare isActive: boolean;
+  declare is_active: boolean;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  declare createdAt: Date;
+  declare created_at: Date;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
     defaultValue: DataType.NOW,
   })
-  declare updatedAt: Date;
+  declare updated_at: Date;
 
   @HasMany(() => Product)
   declare products: Product[];

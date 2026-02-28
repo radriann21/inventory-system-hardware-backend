@@ -10,7 +10,7 @@ import {
 import { Measure } from './measure.entity';
 import { StockMovements } from '../../stock/entities/stock.entity';
 import { CatalogProvider } from '../../providers/entities/catalog-provider.entity';
-import { Category } from './category.entity';
+import { Category } from '../../categories/entities/category.entity';
 
 @Table({
   tableName: 'products',
