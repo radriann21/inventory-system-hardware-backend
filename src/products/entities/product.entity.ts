@@ -7,7 +7,7 @@ import {
   HasMany,
   ForeignKey,
 } from 'sequelize-typescript';
-import { Measure } from './measure.entity';
+import { Measure } from '../../measures/entities/measure.entity';
 import { StockMovements } from '../../stock/entities/stock.entity';
 import { CatalogProvider } from '../../providers/entities/catalog-provider.entity';
 import { Category } from '../../categories/entities/category.entity';
