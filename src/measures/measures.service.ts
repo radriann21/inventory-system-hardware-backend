@@ -1,26 +1,96 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMeasureDto } from './dto/create-measure.dto';
 import { UpdateMeasureDto } from './dto/update-measure.dto';
+import { Measure } from './entities/measure.entity';
 
 @Injectable()
 export class MeasuresService {
-  create(createMeasureDto: CreateMeasureDto) {
-    return 'This action adds a new measure';
+  async create(createMeasureDto: CreateMeasureDto) {
+    const measure = await Measure.findOne({
+      where: {
+        name: createMeasureDto.name,
+      },
+    });
+
+    if (measure) {
+      throw new ConflictException('The measure already exists');
+    }
+
+    try {
+      const newMeasure = await Measure.create({ ...createMeasureDto });
+      return newMeasure;
+    } catch {
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 
-  findAll() {
-    return `This action returns all measures`;
+  async findAll() {
+    try {
+      const measures = await Measure.findAll({
+        where: {
+          is_active: true,
+        },
+      });
+      return measures;
+    } catch {
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} measure`;
+  async findOne(id: number) {
+    const measure = await Measure.findByPk(id);
+
+    if (!measure) {
+      throw new NotFoundException('Measure not found');
+    }
+
+    return measure;
   }
 
-  update(id: number, updateMeasureDto: UpdateMeasureDto) {
-    return `This action updates a #${id} measure`;
+  async update(id: number, updateMeasureDto: UpdateMeasureDto) {
+    const measure = await Measure.findByPk(id);
+
+    if (!measure) {
+      throw new NotFoundException('Measure not found');
+    }
+
+    if (updateMeasureDto.name && updateMeasureDto.name !== measure.name) {
+      const existingMeasure = await Measure.findOne({
+        where: {
+          name: updateMeasureDto.name,
+        },
+      });
+
+      if (existingMeasure) {
+        throw new ConflictException('A measure with this name already exists');
+      }
+    }
+
+    try {
+      await measure.update({ ...updateMeasureDto });
+      return measure;
+    } catch {
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} measure`;
+  async remove(id: number) {
+    const measure = await Measure.findByPk(id);
+
+    if (!measure) {
+      throw new NotFoundException('Measure not found');
+    }
+
+    try {
+      await measure.update({ is_active: false });
+      return { message: 'Measure deactivated successfully' };
+    } catch {
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 }
