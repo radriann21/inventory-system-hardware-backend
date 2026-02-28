@@ -20,7 +20,8 @@ import { Product } from './products/entities/product.entity';
 import { Measure } from './products/entities/measure.entity';
 import { AuthModule } from './auth/auth.module';
 import { CatalogProvider } from './providers/entities/catalog-provider.entity';
-import { Category } from './products/entities/category.entity';
+import { Category } from './categories/entities/category.entity';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { Category } from './products/entities/category.entity';
     StockModule,
     RatesModule,
     AuthModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
