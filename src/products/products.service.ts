@@ -1,26 +1,117 @@
-import { Injectable } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Product } from './entities/product.entity';
+import { InjectModel } from '@nestjs/sequelize';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  private readonly logger = new Logger(ProductsService.name);
+
+  constructor(
+    @InjectModel(Product)
+    private readonly productModel: typeof Product,
+  ) {}
+
+  async createNewProduct(createProductDto: CreateProductDto) {
+    try {
+      const product = await this.productModel.create({ ...createProductDto });
+      return product;
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(
+        'Ha ocurrido un error en el servidor',
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async getAllProducts() {
+    try {
+      const products = await this.productModel.findAll();
+
+      if (products.length === 0) {
+        throw new NotFoundException('No hay productos.');
+      }
+
+      return products;
+    } catch (err) {
+      this.logger.log('Error en el servidor' + err);
+      throw new InternalServerErrorException(
+        'Ha ocurrido un error en el servidor',
+      );
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async getProductByName(name: string) {
+    try {
+      const product = await this.productModel.findOne({ where: { name } });
+
+      if (!product) {
+        throw new NotFoundException('No se ha encontrado el producto.');
+      }
+
+      return product;
+    } catch (err) {
+      this.logger.error(err);
+      throw new InternalServerErrorException(
+        'Ha ocurrido un error en el servidor',
+      );
+    }
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async deleteProduct(id: string) {
+    try {
+      const [affectedCount] = await this.productModel.update(
+        { is_active: false },
+        { where: { id } },
+      );
+
+      if (affectedCount === 0) {
+        throw new NotFoundException(
+          'El producto que intentas eliminar, no existe.',
+        );
+      }
+
+      return {
+        message: 'El producto se ha desactivado correctamente',
+      };
+    } catch (err) {
+      this.logger.error('Ha ocurrido un error en el servidor.' + err);
+      throw new InternalServerErrorException(
+        'Ha ocurrido un error al eliminar.',
+      );
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async updateProduct(id: string, updateProductDto: UpdateProductDto) {
+    try {
+      const { actual_stock, ...newProductData } = updateProductDto;
+
+      const [affectedCount] = await this.productModel.update(
+        { ...newProductData },
+        { where: { id } },
+      );
+
+      if (affectedCount === 0) {
+        throw new NotFoundException(
+          'El producto que intentas actualizar, no existe.',
+        );
+      }
+
+      return {
+        message: 'Producto actualizado correctamente',
+      };
+    } catch (err) {
+      this.logger.log('Error en el servidor' + err);
+      throw new InternalServerErrorException(
+        'Ha ocurrido un error en el servidor',
+      );
+    }
   }
 }

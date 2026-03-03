@@ -74,6 +74,13 @@ export class Product extends Model {
   })
   declare measure_id: number;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
+  })
+  declare is_active: boolean;
+
   @ForeignKey(() => Category)
   @Column({
     type: DataType.INTEGER,
