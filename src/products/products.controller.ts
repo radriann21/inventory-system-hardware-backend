@@ -148,10 +148,55 @@ export class ProductsController {
     status: 401,
     description: 'No autenticado',
   })
-  @Get(':name')
+  @Get('name/:name')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('name') name: string) {
     return this.productsService.getProductByName(name);
+  }
+
+  @ApiOperation({
+    summary: 'Buscar producto por ID',
+    description: 'Busca y retorna un producto específico por su ID',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID del producto a buscar',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Producto encontrado',
+    schema: {
+      example: {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'Intel Core i7-13700K',
+        description: 'Procesador Intel Core i7 de 13va generación',
+        internal_sku: 'SKU-001-2024',
+        price_usd: '399.99',
+        actual_stock: 50,
+        min_stock: 10,
+        brand: 'Intel',
+        is_active: true,
+        measure_id: 1,
+        category_id: 1,
+        tax_percentage: 16,
+        createdAt: '2024-03-02T20:30:00.000Z',
+        updatedAt: '2024-03-02T20:30:00.000Z',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Producto no encontrado',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autenticado',
+  })
+  @Get('id/:id')
+  @HttpCode(HttpStatus.OK)
+  findOneById(@Param('id') id: string) {
+    return this.productsService.getProductById(id);
   }
 
   @ApiOperation({

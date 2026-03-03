@@ -9,6 +9,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { Logger } from '@nestjs/common';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class ProductsService {
@@ -50,7 +51,9 @@ export class ProductsService {
 
   async getProductByName(name: string) {
     try {
-      const product = await this.productModel.findOne({ where: { name } });
+      const product = await this.productModel.findOne({
+        where: { name: { [Op.iLike]: `%${name}%` } },
+      });
 
       if (!product) {
         throw new NotFoundException('No se ha encontrado el producto.');
@@ -59,6 +62,23 @@ export class ProductsService {
       return product;
     } catch (err) {
       this.logger.error(err);
+      throw new InternalServerErrorException(
+        'Ha ocurrido un error en el servidor',
+      );
+    }
+  }
+
+  async getProductById(id: string) {
+    try {
+      const product = await this.productModel.findOne({ where: { id } });
+
+      if (!product) {
+        throw new NotFoundException('No se encontró el producto.');
+      }
+
+      return product;
+    } catch (err) {
+      this.logger.log('Algo ha ido mal' + err);
       throw new InternalServerErrorException(
         'Ha ocurrido un error en el servidor',
       );
