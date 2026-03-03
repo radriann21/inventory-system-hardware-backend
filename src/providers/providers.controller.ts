@@ -126,7 +126,7 @@ export class ProvidersController {
     description: 'No autenticado',
   })
   @UseGuards(AuthGuard)
-  @Get(':name')
+  @Get('/name/:name')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('name') name: string) {
     return this.providersService.findOneProviderByName(name);
@@ -163,7 +163,7 @@ export class ProvidersController {
     description: 'No autenticado',
   })
   @UseGuards(AuthGuard)
-  @Get(':id')
+  @Get('/id/:id')
   @HttpCode(HttpStatus.OK)
   findOneById(@Param('id') id: string) {
     return this.providersService.findOneProviderById(id);

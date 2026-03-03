@@ -8,7 +8,7 @@ import { CatalogProvider } from './catalog-provider.entity';
 export class Provider extends Model {
   @Column({
     type: DataType.UUID,
-    defaultValue: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
     allowNull: false,
     primaryKey: true,
   })
