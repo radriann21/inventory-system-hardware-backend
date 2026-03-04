@@ -94,6 +94,7 @@ export class AuthController {
     return {
       message: 'Login successful',
       user: {
+        user_id: user.id,
         username: user.username,
         name: user.name,
         lastname: user.lastname,
