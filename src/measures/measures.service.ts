@@ -7,11 +7,17 @@ import {
 import { CreateMeasureDto } from './dto/create-measure.dto';
 import { UpdateMeasureDto } from './dto/update-measure.dto';
 import { Measure } from './entities/measure.entity';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class MeasuresService {
+  constructor(
+    @InjectModel(Measure)
+    private readonly measureModel: typeof Measure,
+  ) {}
+
   async create(createMeasureDto: CreateMeasureDto) {
-    const measure = await Measure.findOne({
+    const measure = await this.measureModel.findOne({
       where: {
         name: createMeasureDto.name,
       },
@@ -22,7 +28,9 @@ export class MeasuresService {
     }
 
     try {
-      const newMeasure = await Measure.create({ ...createMeasureDto });
+      const newMeasure = await this.measureModel.create({
+        ...createMeasureDto,
+      });
       return newMeasure;
     } catch {
       throw new InternalServerErrorException('Something went wrong');
@@ -31,7 +39,7 @@ export class MeasuresService {
 
   async findAll() {
     try {
-      const measures = await Measure.findAll({
+      const measures = await this.measureModel.findAll({
         where: {
           is_active: true,
         },
@@ -43,7 +51,7 @@ export class MeasuresService {
   }
 
   async findOne(id: number) {
-    const measure = await Measure.findByPk(id);
+    const measure = await this.measureModel.findByPk(id);
 
     if (!measure) {
       throw new NotFoundException('Measure not found');
@@ -53,14 +61,14 @@ export class MeasuresService {
   }
 
   async update(id: number, updateMeasureDto: UpdateMeasureDto) {
-    const measure = await Measure.findByPk(id);
+    const measure = await this.measureModel.findByPk(id);
 
     if (!measure) {
       throw new NotFoundException('Measure not found');
     }
 
     if (updateMeasureDto.name && updateMeasureDto.name !== measure.name) {
-      const existingMeasure = await Measure.findOne({
+      const existingMeasure = await this.measureModel.findOne({
         where: {
           name: updateMeasureDto.name,
         },
@@ -80,7 +88,7 @@ export class MeasuresService {
   }
 
   async remove(id: number) {
-    const measure = await Measure.findByPk(id);
+    const measure = await this.measureModel.findByPk(id);
 
     if (!measure) {
       throw new NotFoundException('Measure not found');
