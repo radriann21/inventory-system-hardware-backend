@@ -8,11 +8,17 @@ import { CreateProviderDto } from './dto/create-provider.dto';
 import { UpdateProviderDto } from './dto/update-provider.dto';
 import { Provider } from './entities/provider.entity';
 import { Op } from 'sequelize';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class ProvidersService {
+  constructor(
+    @InjectModel(Provider)
+    private readonly providerModel: typeof Provider,
+  ) {}
+
   async createNewProvider(createProviderDto: CreateProviderDto) {
-    const provider = await Provider.findOne({
+    const provider = await this.providerModel.findOne({
       where: {
         name: createProviderDto.name,
       },
@@ -23,7 +29,9 @@ export class ProvidersService {
     }
 
     try {
-      const newProvider = await Provider.create({ ...createProviderDto });
+      const newProvider = await this.providerModel.create({
+        ...createProviderDto,
+      });
 
       return newProvider;
     } catch (error) {
@@ -34,7 +42,7 @@ export class ProvidersService {
 
   async findAllProviders() {
     try {
-      const providers = await Provider.findAll();
+      const providers = await this.providerModel.findAll();
       if (!providers) {
         throw new NotFoundException('Providers not found');
       }
@@ -45,7 +53,7 @@ export class ProvidersService {
   }
 
   async findOneProviderByName(name: string) {
-    const provider = await Provider.findOne({
+    const provider = await this.providerModel.findOne({
       where: { name: { [Op.iLike]: `%${name}%` } },
     });
     if (!provider) {
@@ -55,7 +63,7 @@ export class ProvidersService {
   }
 
   async findOneProviderById(id: string) {
-    const provider = await Provider.findByPk(id);
+    const provider = await this.providerModel.findByPk(id);
     if (!provider) {
       throw new NotFoundException('Provider not found');
     }
@@ -63,7 +71,7 @@ export class ProvidersService {
   }
 
   async deleteProvider(id: string) {
-    const provider = await Provider.findByPk(id);
+    const provider = await this.providerModel.findByPk(id);
 
     if (!provider) {
       throw new NotFoundException('Provider not found');
@@ -78,7 +86,7 @@ export class ProvidersService {
   }
 
   async updateProvider(id: string, updateProviderDto: UpdateProviderDto) {
-    const provider = await Provider.findByPk(id);
+    const provider = await this.providerModel.findByPk(id);
 
     if (!provider) {
       throw new NotFoundException('Provider not found');

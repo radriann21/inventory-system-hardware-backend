@@ -8,11 +8,17 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { Category } from './entities/category.entity';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Op } from 'sequelize';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class CategoriesService {
+  constructor(
+    @InjectModel(Category)
+    private readonly categoryModel: typeof Category,
+  ) {}
+
   async createNewCategory(createCategoryDto: CreateCategoryDto) {
-    const category = await Category.findOne({
+    const category = await this.categoryModel.findOne({
       where: {
         name: createCategoryDto.name,
       },
@@ -23,7 +29,9 @@ export class CategoriesService {
     }
 
     try {
-      const newCategory = await Category.create({ ...createCategoryDto });
+      const newCategory = await this.categoryModel.create({
+        ...createCategoryDto,
+      });
 
       return newCategory;
     } catch (error) {
@@ -34,7 +42,7 @@ export class CategoriesService {
 
   async findAllCategories() {
     try {
-      const categories = await Category.findAll();
+      const categories = await this.categoryModel.findAll();
       if (!categories) {
         throw new NotFoundException('Categories not found');
       }
@@ -45,7 +53,7 @@ export class CategoriesService {
   }
 
   async findOneCategoryByName(name: string) {
-    const category = await Category.findOne({
+    const category = await this.categoryModel.findOne({
       where: { name: { [Op.iLike]: `%${name}%` } },
     });
     if (!category) {
@@ -55,7 +63,7 @@ export class CategoriesService {
   }
 
   async findOneCategoryById(id: number) {
-    const category = await Category.findByPk(id);
+    const category = await this.categoryModel.findByPk(id);
     if (!category) {
       throw new NotFoundException('Category not found');
     }
@@ -63,7 +71,7 @@ export class CategoriesService {
   }
 
   async deleteCategory(id: number) {
-    const category = await Category.findByPk(id);
+    const category = await this.categoryModel.findByPk(id);
 
     if (!category) {
       throw new NotFoundException('Category not found');
@@ -78,7 +86,7 @@ export class CategoriesService {
   }
 
   async updateCategory(id: number, updateCategoryDto: UpdateCategoryDto) {
-    const category = await Category.findByPk(id);
+    const category = await this.categoryModel.findByPk(id);
 
     if (!category) {
       throw new NotFoundException('Category not found');
