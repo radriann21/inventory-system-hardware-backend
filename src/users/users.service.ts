@@ -8,21 +8,17 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/user.entity';
+import { Logger } from '@nestjs/common';
+import { UniqueConstraintError } from 'sequelize';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(@InjectModel(User) private readonly userModel: typeof User) {}
 
   async create(createUserDto: CreateUserDto) {
-    const existingUser = await this.userModel.findOne({
-      where: { username: createUserDto.username },
-    });
-
-    if (existingUser) {
-      throw new ConflictException('User already exists');
-    }
-
     try {
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
@@ -30,7 +26,12 @@ export class UsersService {
         ...createUserDto,
         password_hash: hashedPassword,
       });
-    } catch {
+    } catch (error: unknown) {
+      if (error instanceof UniqueConstraintError) {
+        this.logger.error('Username already exists');
+        throw new ConflictException('Username already exists');
+      }
+      this.logger.error('Error creating user', error);
       throw new InternalServerErrorException('Error creating user');
     }
 
@@ -38,9 +39,21 @@ export class UsersService {
   }
 
   async findAll() {
-    return await this.userModel.findAll({
-      attributes: { exclude: ['password_hash'] },
-    });
+    try {
+      const users = await this.userModel.findAll({
+        attributes: { exclude: ['password_hash'] },
+      });
+
+      if (!users || users.length === 0) {
+        this.logger.error('No se encuentran usuarios.');
+        throw new NotFoundException('No hay usuarios registrados.');
+      }
+
+      return users;
+    } catch (err) {
+      this.logger.error('Error finding all users', err);
+      throw new InternalServerErrorException('Error finding all users');
+    }
   }
 
   async findOne(id: string) {
@@ -56,23 +69,38 @@ export class UsersService {
   }
 
   async findByUsername(username: string) {
-    return await this.userModel.findOne({
-      where: { username },
-    });
+    try {
+      const user = await this.userModel.findOne({
+        where: { username },
+      });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      return user;
+    } catch (err) {
+      this.logger.error('Error finding user by username', err);
+      throw new InternalServerErrorException('Error finding user by username');
+    }
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const user = await this.userModel.findByPk(id, {
-      attributes: { exclude: ['password_hash'] },
-    });
+    try {
+      const user = await this.userModel.findByPk(id, {
+        attributes: { exclude: ['password_hash'] },
+      });
 
-    if (!user) {
-      throw new NotFoundException('User not found');
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      await user.update(updateUserDto);
+
+      return user;
+    } catch (err) {
+      this.logger.error('Error updating user', err);
+      throw new InternalServerErrorException('Error updating user');
     }
-
-    await user.update(updateUserDto);
-
-    return user;
   }
 
   async remove(id: string) {
