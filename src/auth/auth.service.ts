@@ -13,12 +13,6 @@ export class AuthService {
   ) {}
 
   async register({ name, lastname, username, password }: RegisterDto) {
-    const user = await this.usersService.findByUsername(username);
-
-    if (user) {
-      throw new BadRequestException('User already exists');
-    }
-
     await this.usersService.create({
       name,
       lastname,
@@ -31,13 +25,13 @@ export class AuthService {
     const user = await this.usersService.findByUsername(username);
 
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new BadRequestException('Usuario no encontrado');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!isPasswordValid) {
-      throw new BadRequestException('Invalid password');
+      throw new BadRequestException('Contraseña incorrecta');
     }
 
     const payload = { sub: user.id, username: user.username };
