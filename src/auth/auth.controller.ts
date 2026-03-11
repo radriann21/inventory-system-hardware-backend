@@ -5,6 +5,9 @@ import {
   HttpStatus,
   Post,
   Res,
+  UseGuards,
+  Get,
+  Request,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,6 +20,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Response } from 'express';
+import { AuthGuard } from './auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -61,10 +65,10 @@ export class AuthController {
   @ApiBody({ type: LoginDto })
   @ApiResponse({
     status: 200,
-    description: 'Login exitoso, token JWT almacenado en cookie',
+    description: 'Login exitoso con JWT Cookie',
     schema: {
       example: {
-        message: 'Login successful',
+        message: 'Login Exitoso',
         user: {
           username: 'johndoe',
           name: 'John',
@@ -92,7 +96,7 @@ export class AuthController {
     });
 
     return {
-      message: 'Login successful',
+      message: 'Iniciando sesion',
       user: {
         user_id: user.id,
         username: user.username,
@@ -121,5 +125,12 @@ export class AuthController {
   logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
     return { message: 'Logout successful' };
+  }
+
+  @Get('me')
+  @UseGuards(AuthGuard)
+  getProfile(@Request() req: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+    return req.user;
   }
 }
