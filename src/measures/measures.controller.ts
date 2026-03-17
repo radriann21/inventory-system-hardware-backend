@@ -23,6 +23,7 @@ import { CreateMeasureDto } from './dto/create-measure.dto';
 import { UpdateMeasureDto } from './dto/update-measure.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @ApiTags('measures')
 @ApiCookieAuth('access_token')
 @Controller('measures')
@@ -56,7 +57,6 @@ export class MeasuresController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createMeasureDto: CreateMeasureDto) {
@@ -88,7 +88,6 @@ export class MeasuresController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll() {
@@ -126,8 +125,7 @@ export class MeasuresController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
-  @Get(':id')
+  @Get('/id/:id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {
     return this.measuresService.findOne(+id);
@@ -165,8 +163,7 @@ export class MeasuresController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
-  @Patch(':id')
+  @Patch('/update/:id')
   @HttpCode(HttpStatus.OK)
   update(@Param('id') id: string, @Body() updateMeasureDto: UpdateMeasureDto) {
     return this.measuresService.update(+id, updateMeasureDto);
@@ -193,8 +190,7 @@ export class MeasuresController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
-  @Delete(':id')
+  @Delete('/delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     return this.measuresService.remove(+id);
