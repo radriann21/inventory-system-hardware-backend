@@ -43,7 +43,7 @@ export class ProvidersService {
   async findAllProviders() {
     try {
       const providers = await this.providerModel.findAll();
-      if (!providers) {
+      if (!providers || providers.length === 0) {
         throw new NotFoundException('Providers not found');
       }
       return providers;
