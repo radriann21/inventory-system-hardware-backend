@@ -25,7 +25,7 @@ export class CategoriesService {
     });
 
     if (category) {
-      throw new ConflictException('The category already exists');
+      throw new ConflictException('La categoría ya existe');
     }
 
     try {
@@ -36,19 +36,21 @@ export class CategoriesService {
       return newCategory;
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('Something went wrong');
+      throw new InternalServerErrorException('Algo fue mal.');
     }
   }
 
   async findAllCategories() {
     try {
-      const categories = await this.categoryModel.findAll();
+      const categories = await this.categoryModel.findAll({
+        where: { is_active: true },
+      });
       if (!categories) {
-        throw new NotFoundException('Categories not found');
+        throw new NotFoundException('Categorías no encontradas');
       }
       return categories;
     } catch {
-      throw new InternalServerErrorException('Something went wrong');
+      throw new InternalServerErrorException('Algo fue mal.');
     }
   }
 
@@ -57,7 +59,7 @@ export class CategoriesService {
       where: { name: { [Op.iLike]: `%${name}%` } },
     });
     if (!category) {
-      throw new NotFoundException('Category not found');
+      throw new NotFoundException('Categoría no encontrada');
     }
     return category;
   }
@@ -65,7 +67,7 @@ export class CategoriesService {
   async findOneCategoryById(id: number) {
     const category = await this.categoryModel.findByPk(id);
     if (!category) {
-      throw new NotFoundException('Category not found');
+      throw new NotFoundException('Categoría no encontrada');
     }
     return category;
   }
@@ -74,14 +76,14 @@ export class CategoriesService {
     const category = await this.categoryModel.findByPk(id);
 
     if (!category) {
-      throw new NotFoundException('Category not found');
+      throw new NotFoundException('Categoría no encontrada');
     }
 
     try {
       await category?.update({ is_active: false });
-      return { message: 'Category deactivated successfully' };
+      return { message: 'Categoría desactivada exitosamente' };
     } catch {
-      throw new InternalServerErrorException('Something went wrong');
+      throw new InternalServerErrorException('Algo fue mal.');
     }
   }
 
@@ -89,7 +91,7 @@ export class CategoriesService {
     const category = await this.categoryModel.findByPk(id);
 
     if (!category) {
-      throw new NotFoundException('Category not found');
+      throw new NotFoundException('Categoría no encontrada');
     }
 
     const updatedCategory = await category?.update({
@@ -97,7 +99,7 @@ export class CategoriesService {
     });
 
     if (!updatedCategory) {
-      throw new NotFoundException('Category not found');
+      throw new NotFoundException('Categoría no encontrada');
     }
     return updatedCategory;
   }

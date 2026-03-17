@@ -23,6 +23,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @ApiTags('categories')
 @ApiCookieAuth('access_token')
 @Controller('categories')
@@ -56,7 +57,6 @@ export class CategoriesController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createCategoryDto: CreateCategoryDto) {
@@ -87,7 +87,6 @@ export class CategoriesController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll() {
@@ -125,7 +124,6 @@ export class CategoriesController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Get('/name/:name')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('name') name: string) {
@@ -163,7 +161,6 @@ export class CategoriesController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Get('/id/:id')
   @HttpCode(HttpStatus.OK)
   findOneById(@Param('id') id: string) {
@@ -202,7 +199,6 @@ export class CategoriesController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Patch('/update/:id')
   @HttpCode(HttpStatus.OK)
   update(
@@ -233,7 +229,6 @@ export class CategoriesController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Delete('/delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {

@@ -1,4 +1,4 @@
-import { IsBoolean, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCategoryDto {
@@ -17,12 +17,4 @@ export class CreateCategoryDto {
   })
   @IsString()
   description: string;
-
-  @ApiProperty({
-    description: 'Estado de activación de la categoría',
-    example: true,
-    type: Boolean,
-  })
-  @IsBoolean()
-  is_active: boolean;
 }
