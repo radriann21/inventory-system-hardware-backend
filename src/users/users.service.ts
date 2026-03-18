@@ -9,7 +9,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/user.entity';
 import { Logger } from '@nestjs/common';
-import { UniqueConstraintError } from 'sequelize';
+import { UniqueConstraintError, Op } from 'sequelize';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -38,18 +39,33 @@ export class UsersService {
     return { message: 'User created successfully' };
   }
 
-  async findAll() {
+  async findAll(paginationDto: PaginationDto) {
     try {
-      const users = await this.userModel.findAll({
-        attributes: { exclude: ['password_hash'] },
+      const page = paginationDto.page ?? 1;
+      const limit = paginationDto.limit ?? 10;
+
+      const users = await this.userModel.findAndCountAll({
+        limit: limit,
+        offset: (page - 1) * limit,
+        where: paginationDto.search
+          ? {
+              [Op.or]: [
+                { username: { [Op.iLike]: `%${paginationDto.search}%` } },
+                { name: { [Op.iLike]: `%${paginationDto.search}%` } },
+                { lastname: { [Op.iLike]: `%${paginationDto.search}%` } },
+              ],
+            }
+          : {},
       });
 
-      if (!users || users.length === 0) {
-        this.logger.error('No se encuentran usuarios.');
-        throw new NotFoundException('No hay usuarios registrados.');
-      }
-
-      return users;
+      return {
+        data: users.rows,
+        meta: {
+          total: users.count,
+          page,
+          limit,
+        },
+      };
     } catch (err) {
       this.logger.error('Error finding all users', err);
       throw new InternalServerErrorException('Error finding all users');

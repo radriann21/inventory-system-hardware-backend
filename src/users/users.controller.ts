@@ -9,6 +9,7 @@ import {
   HttpCode,
   UseGuards,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -23,10 +24,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserParamDTO } from './dto/user-param.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @ApiTags('users')
 @ApiCookieAuth('access_token')
 @Controller('users')
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -56,7 +59,6 @@ export class UsersController {
     status: 409,
     description: 'El usuario ya existe',
   })
-  @UseGuards(AuthGuard)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createUserDto: CreateUserDto) {
@@ -87,11 +89,10 @@ export class UsersController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.usersService.findAll(paginationDto);
   }
 
   @ApiOperation({
@@ -124,7 +125,6 @@ export class UsersController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   findOne(@Param() params: UserParamDTO) {
@@ -162,8 +162,7 @@ export class UsersController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
-  @Patch(':id')
+  @Patch('/update/:id')
   @HttpCode(HttpStatus.OK)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
@@ -190,8 +189,7 @@ export class UsersController {
     status: 401,
     description: 'No autenticado',
   })
-  @UseGuards(AuthGuard)
-  @Delete(':id')
+  @Delete('/delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param() params: UserParamDTO) {
     return this.usersService.remove(params.id);
