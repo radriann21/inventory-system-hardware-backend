@@ -13,7 +13,7 @@ module.exports = {
         id: uuidv4(),
         name: 'Admin',
         lastname: 'Sistema',
-        username: 'admin',
+        username: 'administrador',
         password_hash: hashedPassword,
         created_at: new Date(),
       },
