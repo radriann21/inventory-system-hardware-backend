@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsBoolean } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProductDto {
@@ -19,20 +19,12 @@ export class CreateProductDto {
   description: string;
 
   @ApiProperty({
-    description: 'Código SKU interno del producto',
-    example: 'SKU-001-2024',
-    type: String,
-  })
-  @IsString()
-  internal_sku: string;
-
-  @ApiProperty({
     description: 'Precio del producto en dólares (USD)',
-    example: '399.99',
-    type: String,
+    example: 399.99,
+    type: Number,
   })
-  @IsString()
-  price_usd: string;
+  @IsNumber()
+  price_usd: number;
 
   @ApiProperty({
     description: 'Stock actual disponible',
@@ -49,22 +41,6 @@ export class CreateProductDto {
   })
   @IsNumber()
   min_stock: number;
-
-  @ApiProperty({
-    description: 'Marca del producto',
-    example: 'Intel',
-    type: String,
-  })
-  @IsString()
-  brand: string;
-
-  @ApiProperty({
-    description: 'Estado de activación del producto',
-    example: true,
-    type: Boolean,
-  })
-  @IsBoolean()
-  is_active: boolean;
 
   @ApiProperty({
     description: 'ID de la unidad de medida asociada',
@@ -88,5 +64,6 @@ export class CreateProductDto {
     type: Number,
   })
   @IsNumber()
+  @IsOptional()
   tax_percentage: number;
 }

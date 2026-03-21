@@ -38,12 +38,6 @@ export class Product extends Model {
   declare description: string;
 
   @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  declare internal_sku: string;
-
-  @Column({
     type: DataType.DECIMAL(12, 2),
     allowNull: false,
   })
@@ -61,12 +55,6 @@ export class Product extends Model {
   })
   declare min_stock: number;
 
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  declare brand: string;
-
   @ForeignKey(() => Measure)
   @Column({
     type: DataType.INTEGER,
@@ -80,6 +68,13 @@ export class Product extends Model {
     defaultValue: true,
   })
   declare is_active: boolean;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 16,
+  })
+  declare tax_percentage: number;
 
   @ForeignKey(() => Category)
   @Column({
