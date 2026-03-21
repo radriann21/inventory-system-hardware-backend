@@ -10,6 +10,9 @@ import { Product } from './entities/product.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { Logger } from '@nestjs/common';
 import { Op } from 'sequelize';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { Category } from 'src/categories/entities/category.entity';
+import { Measure } from 'src/measures/entities/measure.entity';
 
 @Injectable()
 export class ProductsService {
@@ -32,15 +35,55 @@ export class ProductsService {
     }
   }
 
-  async getAllProducts() {
+  async getAllProducts(paginationDto: PaginationDto) {
     try {
-      const products = await this.productModel.findAll();
+      const page = paginationDto.page ?? 1;
+      const limit = paginationDto.limit ?? 10;
 
-      if (products.length === 0) {
-        throw new NotFoundException('No hay productos.');
+      const products = await this.productModel.findAndCountAll({
+        limit: limit,
+        offset: (page - 1) * limit,
+        where: paginationDto.search
+          ? {
+              [Op.or]: [
+                { name: { [Op.iLike]: `%${paginationDto.search}%` } },
+                { description: { [Op.iLike]: `%${paginationDto.search}%` } },
+              ],
+            }
+          : {},
+        include: [
+          {
+            model: Category,
+            as: 'category',
+            attributes: ['id', 'name'],
+          },
+          {
+            model: Measure,
+            as: 'measure',
+            attributes: ['id', 'name', 'abbreviation'],
+          },
+        ],
+      });
+
+      if (products.count === 0) {
+        return {
+          data: [],
+          meta: {
+            total: 0,
+            page,
+            limit,
+          },
+        };
       }
 
-      return products;
+      return {
+        data: products.rows,
+        meta: {
+          total: products.count,
+          page,
+          limit,
+        },
+      };
     } catch (err) {
       this.logger.log('Error en el servidor' + err);
       throw new InternalServerErrorException(

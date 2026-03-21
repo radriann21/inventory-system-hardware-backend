@@ -9,6 +9,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -22,6 +23,7 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @ApiTags('products')
 @ApiCookieAuth('access_token')
@@ -43,11 +45,9 @@ export class ProductsController {
         id: '123e4567-e89b-12d3-a456-426614174000',
         name: 'Intel Core i7-13700K',
         description: 'Procesador Intel Core i7 de 13va generación, 16 núcleos',
-        internal_sku: 'SKU-001-2024',
         price_usd: '399.99',
         actual_stock: 50,
         min_stock: 10,
-        brand: 'Intel',
         is_active: true,
         measure_id: 1,
         category_id: 1,
@@ -84,11 +84,9 @@ export class ProductsController {
           id: '123e4567-e89b-12d3-a456-426614174000',
           name: 'Intel Core i7-13700K',
           description: 'Procesador Intel Core i7 de 13va generación',
-          internal_sku: 'SKU-001-2024',
           price_usd: '399.99',
           actual_stock: 50,
           min_stock: 10,
-          brand: 'Intel',
           is_active: true,
           measure_id: 1,
           category_id: 1,
@@ -105,8 +103,8 @@ export class ProductsController {
   })
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll() {
-    return this.productsService.getAllProducts();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.productsService.getAllProducts(paginationDto);
   }
 
   @ApiOperation({
@@ -126,11 +124,9 @@ export class ProductsController {
         id: '123e4567-e89b-12d3-a456-426614174000',
         name: 'Intel Core i7-13700K',
         description: 'Procesador Intel Core i7 de 13va generación',
-        internal_sku: 'SKU-001-2024',
         price_usd: '399.99',
         actual_stock: 50,
         min_stock: 10,
-        brand: 'Intel',
         is_active: true,
         measure_id: 1,
         category_id: 1,
@@ -171,11 +167,9 @@ export class ProductsController {
         id: '123e4567-e89b-12d3-a456-426614174000',
         name: 'Intel Core i7-13700K',
         description: 'Procesador Intel Core i7 de 13va generación',
-        internal_sku: 'SKU-001-2024',
         price_usd: '399.99',
         actual_stock: 50,
         min_stock: 10,
-        brand: 'Intel',
         is_active: true,
         measure_id: 1,
         category_id: 1,
@@ -249,11 +243,9 @@ export class ProductsController {
         id: '123e4567-e89b-12d3-a456-426614174000',
         name: 'Intel Core i7-13700K',
         description: 'Procesador Intel Core i7 actualizado',
-        internal_sku: 'SKU-001-2024',
         price_usd: '379.99',
         actual_stock: 45,
         min_stock: 10,
-        brand: 'Intel',
         is_active: true,
         measure_id: 1,
         category_id: 1,
