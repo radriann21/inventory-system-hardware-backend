@@ -49,6 +49,7 @@ export class ProductsService {
                 { name: { [Op.iLike]: `%${paginationDto.search}%` } },
                 { description: { [Op.iLike]: `%${paginationDto.search}%` } },
               ],
+              is_active: true,
             }
           : {},
         include: [
