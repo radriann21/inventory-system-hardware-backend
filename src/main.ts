@@ -20,7 +20,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Inventory System Hardware API')
     .setDescription(
-      'API REST para la gestión de inventario de hardware. Permite administrar productos, categorías, unidades de medida y autenticación de usuarios.',
+      'API REST para la gestión de inventario de hardware. Permite administrar productos, categorías, proveedores, catálogo de proveedores, unidades de medida, movimientos de stock y autenticación de usuarios. Los productos incluyen información de impuestos y se relacionan con proveedores a través de una tabla intermedia catalog_provider.',
     )
     .setVersion('1.0.0')
     .setContact(
@@ -32,7 +32,12 @@ async function bootstrap() {
     .addTag('auth', 'Endpoints de autenticación y gestión de usuarios')
     .addTag('categories', 'Gestión de categorías de productos')
     .addTag('measures', 'Gestión de unidades de medida')
-    .addTag('products', 'Gestión de productos del inventario')
+    .addTag(
+      'products',
+      'Gestión de productos del inventario con información de impuestos',
+    )
+    .addTag('providers', 'Gestión de proveedores')
+    .addTag('stock', 'Gestión de movimientos de stock (entradas/salidas)')
     .addCookieAuth(
       'access_token',
       {
@@ -67,7 +72,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
 
   app.use(
-    '/api/reference',
+    '/api',
     apiReference({
       spec: {
         content: document,
@@ -77,12 +82,6 @@ async function bootstrap() {
       darkMode: true,
     }),
   );
-
-  SwaggerModule.setup('api', app, document, {
-    customSiteTitle: 'Inventory System API Docs',
-    customfavIcon: 'https://nestjs.com/img/logo-small.svg',
-    customCss: '.swagger-ui .topbar { display: none }',
-  });
 
   await app.listen(process.env.PORT ?? 3000);
 }

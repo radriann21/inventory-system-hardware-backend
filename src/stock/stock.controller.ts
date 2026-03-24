@@ -6,6 +6,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,6 +18,7 @@ import {
 import { StockService } from './stock.service';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { AuthGuard } from '../auth/auth.guard';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @ApiTags('stock')
 @ApiCookieAuth('access_token')
@@ -87,7 +89,7 @@ export class StockController {
   })
   @Get()
   @HttpCode(HttpStatus.OK)
-  findAll() {
-    return this.stockService.getAllMovements();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.stockService.getAllMovements(paginationDto);
   }
 }
