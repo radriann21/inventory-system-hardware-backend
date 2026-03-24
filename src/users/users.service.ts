@@ -27,16 +27,18 @@ export class UsersService {
         ...createUserDto,
         password_hash: hashedPassword,
       });
+
+      return {
+        message: 'Usuario creado exitosamente',
+      };
     } catch (error: unknown) {
       if (error instanceof UniqueConstraintError) {
-        this.logger.error('Username already exists');
-        throw new ConflictException('Username already exists');
+        this.logger.error('El usuario ya existe');
+        throw new ConflictException('El usuario ya existe');
       }
       this.logger.error('Error creating user', error);
       throw new InternalServerErrorException('Error creating user');
     }
-
-    return { message: 'User created successfully' };
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -67,8 +69,8 @@ export class UsersService {
         },
       };
     } catch (err) {
-      this.logger.error('Error finding all users', err);
-      throw new InternalServerErrorException('Error finding all users');
+      this.logger.error('Error al encontrar los usuarios', err);
+      throw new InternalServerErrorException('Error al encontrar los usuarios');
     }
   }
 
@@ -78,7 +80,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     return user;
@@ -91,13 +93,15 @@ export class UsersService {
       });
 
       if (!user) {
-        throw new NotFoundException('User not found');
+        throw new NotFoundException('Usuario no encontrado');
       }
 
       return user;
     } catch (err) {
-      this.logger.error('Error finding user by username', err);
-      throw new InternalServerErrorException('Error finding user by username');
+      this.logger.error('Error al encontrar usuario por username', err);
+      throw new InternalServerErrorException(
+        'Error al encontrar usuario por username',
+      );
     }
   }
 
@@ -108,14 +112,14 @@ export class UsersService {
       });
 
       if (!user) {
-        throw new NotFoundException('User not found');
+        throw new NotFoundException('Usuario no encontrado');
       }
       await user.update(updateUserDto);
 
       return user;
     } catch (err) {
-      this.logger.error('Error updating user', err);
-      throw new InternalServerErrorException('Error updating user');
+      this.logger.error('Error al actualizar usuario', err);
+      throw new InternalServerErrorException('Error al actualizar usuario');
     }
   }
 
@@ -125,11 +129,11 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     await user.destroy();
 
-    return { message: 'User deleted successfully' };
+    return { message: 'Usuario eliminado exitosamente' };
   }
 }
