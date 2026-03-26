@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  StreamableFile,
 } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -13,6 +15,7 @@ import { Op } from 'sequelize';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { Category } from 'src/categories/entities/category.entity';
 import { Measure } from 'src/measures/entities/measure.entity';
+import * as XLSX from 'xlsx';
 
 @Injectable()
 export class ProductsService {
@@ -21,6 +24,10 @@ export class ProductsService {
   constructor(
     @InjectModel(Product)
     private readonly productModel: typeof Product,
+    @InjectModel(Category)
+    private readonly categoryModel: typeof Category,
+    @InjectModel(Measure)
+    private readonly measureModel: typeof Measure,
   ) {}
 
   async createNewProduct(createProductDto: CreateProductDto) {
@@ -173,6 +180,120 @@ export class ProductsService {
       };
     } catch (err) {
       this.logger.log('Error en el servidor' + err);
+      throw new InternalServerErrorException(
+        'Ha ocurrido un error en el servidor',
+      );
+    }
+  }
+
+  async exportProductsToExcel() {
+    try {
+      const products = await this.productModel.findAll({
+        include: [
+          {
+            model: Category,
+            as: 'category',
+          },
+          {
+            model: Measure,
+            as: 'measure',
+          },
+        ],
+        order: [['created_at', 'DESC']],
+      });
+
+      if (products.length === 0) {
+        throw new NotFoundException('No se encontraron productos.');
+      }
+
+      const transformedProducts = products.map((product) => {
+        const productData: Partial<Product> = product.toJSON();
+        return {
+          nombre: productData.name,
+          descripcion: productData.description,
+          precio_usd: productData.price_usd,
+          stock_actual: productData.actual_stock,
+          stock_minimo: productData.min_stock,
+          categoria: productData.category?.name || 'Sin categoría',
+          medida: productData.measure?.name || 'Sin medida',
+          activo: productData.is_active ? 'Sí' : 'No',
+          creado: productData.created_at
+            ? new Date(productData.created_at).toISOString()
+            : '',
+        } as Partial<Product>;
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(transformedProducts);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Productos');
+      XLSX.utils.sheet_add_json(worksheet, transformedProducts);
+      const buf = XLSX.write(workbook, {
+        type: 'buffer',
+        bookType: 'xlsx',
+      }) as Buffer;
+      return new StreamableFile(buf);
+    } catch (err) {
+      this.logger.error('Error en el servidor' + err);
+      throw new InternalServerErrorException(
+        'Ha ocurrido un error en el servidor',
+      );
+    }
+  }
+
+  async importProductsFromExcel(file: Express.Multer.File) {
+    try {
+      const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rawData = XLSX.utils
+        .sheet_to_json(sheet, { header: 1 })
+        .slice(1)
+        .filter(
+          (row: unknown[]) =>
+            row[0] !== undefined && row[0] !== '' && row[0] !== null,
+        );
+
+      if (rawData.length === 0) {
+        throw new BadRequestException('El archivo Excel está vacío.');
+      }
+
+      const categories = await this.categoryModel.findAll({
+        where: {
+          is_active: true,
+        },
+      });
+      const measures = await this.measureModel.findAll({
+        where: {
+          is_active: true,
+        },
+      });
+
+      const mappedData = rawData.map((row: unknown[]) => {
+        const category = categories.find(
+          (cat) => cat.name === row[5] && cat.is_active,
+        );
+        const measure = measures.find(
+          (meas) => meas.name === row[6] && meas.is_active,
+        );
+
+        return {
+          name: row[0],
+          description: row[1],
+          price_usd: row[2],
+          actual_stock: row[3],
+          min_stock: row[4],
+          category_id: category?.id,
+          measure_id: measure?.id,
+        };
+      });
+
+      const result = await this.productModel.bulkCreate(mappedData);
+
+      return {
+        message: 'Productos importados exitosamente',
+        result,
+      };
+    } catch (err) {
+      this.logger.error('Error en el servidor' + err);
       throw new InternalServerErrorException(
         'Ha ocurrido un error en el servidor',
       );

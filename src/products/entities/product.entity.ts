@@ -76,6 +76,13 @@ export class Product extends Model {
   })
   declare tax_percentage: number;
 
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: DataType.NOW,
+  })
+  declare created_at: Date;
+
   @ForeignKey(() => Category)
   @Column({
     type: DataType.INTEGER,
