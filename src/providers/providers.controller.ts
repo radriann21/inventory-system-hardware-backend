@@ -9,6 +9,7 @@ import {
   UseGuards,
   HttpStatus,
   HttpCode,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -22,6 +23,7 @@ import { ProvidersService } from './providers.service';
 import { CreateProviderDto } from './dto/create-provider.dto';
 import { UpdateProviderDto } from './dto/update-provider.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 @ApiTags('providers')
 @ApiCookieAuth('access_token')
 @Controller('providers')
@@ -89,6 +91,9 @@ export class ProvidersController {
     description: 'No autenticado',
   })
   @UseGuards(AuthGuard)
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('providers')
+  @CacheTTL(1800000)
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll() {
@@ -126,6 +131,8 @@ export class ProvidersController {
     description: 'No autenticado',
   })
   @UseGuards(AuthGuard)
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(1800000)
   @Get('/name/:name')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('name') name: string) {
@@ -163,6 +170,8 @@ export class ProvidersController {
     description: 'No autenticado',
   })
   @UseGuards(AuthGuard)
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(1800000)
   @Get('/id/:id')
   @HttpCode(HttpStatus.OK)
   findOneById(@Param('id') id: string) {

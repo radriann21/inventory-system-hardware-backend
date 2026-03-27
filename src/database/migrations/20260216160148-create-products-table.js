@@ -18,10 +18,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
-      internal_sku: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       price_usd: {
         type: Sequelize.DECIMAL(12, 2),
         allowNull: false
@@ -34,10 +30,6 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      brand: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       measure_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -47,6 +39,16 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT'
+      },
+      tax_percentage: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 16
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW
       },
       provider_id: {
         type: Sequelize.UUID,

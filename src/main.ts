@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
+import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
@@ -11,8 +12,13 @@ async function bootstrap() {
     logger: ['error', 'warn', 'log'],
   });
 
+  app.use(helmet());
+
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FRONTEND_URL
+        : 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   });

@@ -10,6 +10,12 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  Header,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -24,6 +30,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('products')
 @ApiCookieAuth('access_token')
@@ -267,5 +274,79 @@ export class ProductsController {
   @HttpCode(HttpStatus.OK)
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.updateProduct(id, updateProductDto);
+  }
+
+  @ApiOperation({
+    summary: 'Exportar productos a Excel',
+    description:
+      'Exporta todos los productos del inventario a un archivo Excel',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Archivo Excel generado exitosamente',
+    content: {
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
+        schema: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autenticado',
+  })
+  @Get('export')
+  @Header(
+    'Content-Type',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  )
+  @Header('Content-Disposition', 'attachment; filename="productos.xlsx"')
+  async export() {
+    return this.productsService.exportProductsToExcel();
+  }
+
+  @ApiOperation({
+    summary: 'Importar productos desde Excel',
+    description:
+      'Importa productos desde un archivo Excel y los agrega al inventario',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Productos importados exitosamente',
+    schema: {
+      example: {
+        message: 'Productos importados exitosamente',
+        imported: 10,
+        failed: 0,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Archivo inválido o formato incorrecto',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'No autenticado',
+  })
+  @Post('import')
+  @UseInterceptors(FileInterceptor('file'))
+  async import(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10 }), // 10MB
+          new FileTypeValidator({
+            fileType:
+              /^(application\/vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet|application\/vnd\.ms-excel|text\/csv)$/,
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.productsService.importProductsFromExcel(file);
   }
 }
