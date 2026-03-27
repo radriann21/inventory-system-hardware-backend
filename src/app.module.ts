@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -15,6 +17,10 @@ import { CategoriesModule } from './categories/categories.module';
 import { MeasuresModule } from './measures/measures.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { CacheModule } from '@nestjs/cache-manager';
+import { Keyv } from '@keyv/redis';
+import { CacheableMemory } from 'cacheable';
+import KeyvRedis from '@keyv/redis';
 
 @Module({
   imports: [
@@ -39,6 +45,24 @@ import { ThrottlerModule } from '@nestjs/throttler';
     }),
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          stores: [
+            new Keyv({
+              store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
+            }),
+            new KeyvRedis(
+              configService.get<string>('NODE_ENV') === 'production'
+                ? configService.get<string>('REDIS_URL')
+                : 'redis://localhost:6379',
+            ),
+          ],
+        };
+      },
     }),
     SequelizeModule.forRootAsync({
       inject: [ConfigService],

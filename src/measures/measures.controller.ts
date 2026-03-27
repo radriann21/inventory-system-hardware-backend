@@ -9,6 +9,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -22,6 +23,7 @@ import { MeasuresService } from './measures.service';
 import { CreateMeasureDto } from './dto/create-measure.dto';
 import { UpdateMeasureDto } from './dto/update-measure.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 
 @UseGuards(AuthGuard)
 @ApiTags('measures')
@@ -88,6 +90,9 @@ export class MeasuresController {
     status: 401,
     description: 'No autenticado',
   })
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('measures')
+  @CacheTTL(3600000)
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll() {
@@ -127,6 +132,8 @@ export class MeasuresController {
   })
   @Get('/id/:id')
   @HttpCode(HttpStatus.OK)
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(3600000)
   findOne(@Param('id') id: string) {
     return this.measuresService.findOne(+id);
   }

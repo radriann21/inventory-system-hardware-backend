@@ -9,6 +9,7 @@ import {
   UseGuards,
   HttpStatus,
   HttpCode,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -22,6 +23,7 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 
 @UseGuards(AuthGuard)
 @ApiTags('categories')
@@ -87,6 +89,9 @@ export class CategoriesController {
     status: 401,
     description: 'No autenticado',
   })
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('categories')
+  @CacheTTL(3600000)
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll() {
@@ -124,6 +129,8 @@ export class CategoriesController {
     status: 401,
     description: 'No autenticado',
   })
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(3600000)
   @Get('/name/:name')
   @HttpCode(HttpStatus.OK)
   findOne(@Param('name') name: string) {
@@ -161,6 +168,8 @@ export class CategoriesController {
     status: 401,
     description: 'No autenticado',
   })
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(3600000)
   @Get('/id/:id')
   @HttpCode(HttpStatus.OK)
   findOneById(@Param('id') id: string) {
