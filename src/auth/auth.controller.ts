@@ -21,6 +21,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Response } from 'express';
 import { AuthGuard } from './auth.guard';
+import { CookieConfig } from './constants/constants';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -89,11 +90,7 @@ export class AuthController {
   ) {
     const { token, user } = await this.authService.login(loginDto);
 
-    res.cookie('access_token', token, {
-      httpOnly: true,
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24,
-    });
+    res.cookie('access_token', token, CookieConfig);
 
     return {
       message: 'Iniciando sesion',
