@@ -37,6 +37,7 @@ module.exports = {
         category_id: getCategoryId('Ferretería'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -49,6 +50,7 @@ module.exports = {
         category_id: getCategoryId('Pinturas'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -61,6 +63,7 @@ module.exports = {
         category_id: getCategoryId('Construcción'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -73,6 +76,7 @@ module.exports = {
         category_id: getCategoryId('Electricidad'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -85,6 +89,7 @@ module.exports = {
         category_id: getCategoryId('Plomería'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -97,6 +102,7 @@ module.exports = {
         category_id: getCategoryId('Herramientas'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -109,6 +115,7 @@ module.exports = {
         category_id: getCategoryId('Ferretería'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -121,6 +128,7 @@ module.exports = {
         category_id: getCategoryId('Ferretería'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -133,6 +141,7 @@ module.exports = {
         category_id: getCategoryId('Herramientas'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -145,6 +154,7 @@ module.exports = {
         category_id: getCategoryId('Ferretería'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -157,6 +167,7 @@ module.exports = {
         category_id: getCategoryId('Herramientas'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -169,6 +180,7 @@ module.exports = {
         category_id: getCategoryId('Ferretería'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -181,6 +193,7 @@ module.exports = {
         category_id: getCategoryId('Ferretería'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -193,6 +206,7 @@ module.exports = {
         category_id: getCategoryId('Pinturas'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -205,6 +219,7 @@ module.exports = {
         category_id: getCategoryId('Ferretería'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -217,6 +232,7 @@ module.exports = {
         category_id: getCategoryId('Pinturas'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -229,6 +245,7 @@ module.exports = {
         category_id: getCategoryId('Pinturas'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -241,6 +258,7 @@ module.exports = {
         category_id: getCategoryId('Ferretería'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -253,6 +271,7 @@ module.exports = {
         category_id: getCategoryId('Herramientas'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -265,6 +284,7 @@ module.exports = {
         category_id: getCategoryId('Electricidad'),
         tax_percentage: 16,
         created_at: new Date(),
+        updated_at: new Date(),
       },
     ], {});
   },

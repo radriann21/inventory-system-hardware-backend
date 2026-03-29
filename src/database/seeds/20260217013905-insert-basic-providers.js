@@ -12,6 +12,9 @@ module.exports = {
         phone_number: '+58-212-555-0101',
         contact_name: 'Carlos Rodríguez',
         address: 'Av. Principal, Caracas',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -19,6 +22,9 @@ module.exports = {
         phone_number: '+58-212-555-0102',
         contact_name: 'María González',
         address: 'Calle Comercio, Valencia',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -26,6 +32,9 @@ module.exports = {
         phone_number: '+58-212-555-0103',
         contact_name: 'José Martínez',
         address: 'Zona Industrial, Maracay',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -33,6 +42,9 @@ module.exports = {
         phone_number: '+58-212-555-0104',
         contact_name: 'Ana López',
         address: 'Centro Comercial Las Américas',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -40,6 +52,9 @@ module.exports = {
         phone_number: '+58-212-555-0105',
         contact_name: 'Pedro Ramírez',
         address: 'Carretera Nacional, Barquisimeto',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -47,6 +62,9 @@ module.exports = {
         phone_number: '+58-212-555-0106',
         contact_name: 'Laura Fernández',
         address: 'Av. Bolívar, Maracaibo',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -54,6 +72,9 @@ module.exports = {
         phone_number: '+58-212-555-0107',
         contact_name: 'Roberto Silva',
         address: 'Calle 72, Valencia',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -61,6 +82,9 @@ module.exports = {
         phone_number: '+58-212-555-0108',
         contact_name: 'Carmen Díaz',
         address: 'Zona Industrial Norte',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -68,6 +92,9 @@ module.exports = {
         phone_number: '+58-212-555-0109',
         contact_name: 'Luis Pérez',
         address: 'Puerto La Guaira',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
       {
         id: uuidv4(),
@@ -75,6 +102,9 @@ module.exports = {
         phone_number: '+58-212-555-0110',
         contact_name: 'Elena Torres',
         address: 'Centro, Caracas',
+        is_active: true,
+        created_at: new Date(),
+        updated_at: new Date(),
       },
     ], {});
   },

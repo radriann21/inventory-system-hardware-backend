@@ -30,12 +30,26 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT'
       },
+      provider_id: {
+        type: Sequelize.UUID,
+        allowNull: true,
+        references: {
+          model: 'providers',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
+      ref_invoice: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       quantity: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
       type: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('ENTRY', 'EXIT', 'ADJUSTMENT'),
         allowNull: false
       },
       description: {

@@ -50,15 +50,10 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.NOW
       },
-      provider_id: {
-        type: Sequelize.UUID,
+      updated_at: {
+        type: Sequelize.DATE,
         allowNull: false,
-        references: {
-          model: 'providers',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT'
+        defaultValue: Sequelize.NOW
       }
     })
   },
