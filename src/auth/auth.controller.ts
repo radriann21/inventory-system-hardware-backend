@@ -38,7 +38,7 @@ export class AuthController {
     description: 'Usuario registrado exitosamente',
     schema: {
       example: {
-        message: 'User created successfully',
+        message: 'Usuario registrado exitosamente',
         user: {
           id: '123e4567-e89b-12d3-a456-426614174000',
           username: 'johndoe',
@@ -71,9 +71,9 @@ export class AuthController {
       example: {
         message: 'Login Exitoso',
         user: {
-          username: 'johndoe',
-          name: 'John',
-          lastname: 'Doe',
+          username: 'administrador',
+          name: 'Admin',
+          lastname: 'Sistema',
         },
       },
     },
@@ -93,7 +93,7 @@ export class AuthController {
     res.cookie('access_token', token, CookieConfig);
 
     return {
-      message: 'Iniciando sesion',
+      message: 'Inicio de sesion exitoso',
       user: {
         user_id: user.id,
         username: user.username,
@@ -113,7 +113,7 @@ export class AuthController {
     description: 'Sesión cerrada exitosamente',
     schema: {
       example: {
-        message: 'Logout successful',
+        message: 'Cierre de sesion exitoso',
       },
     },
   })
@@ -121,7 +121,7 @@ export class AuthController {
   @Post('logout')
   logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
-    return { message: 'Logout successful' };
+    return { message: 'Cierre de sesion exitoso' };
   }
 
   @Get('me')

@@ -34,26 +34,29 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      is_main: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      is_active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
       last_purchase_price: {
         type: Sequelize.DECIMAL(12, 2),
         allowNull: true
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW
       }
     });
-
-    await queryInterface.removeColumn('products', 'provider_id');
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.addColumn('products', 'provider_id', {
-      type: Sequelize.UUID,
-      allowNull: false,
-      references: {
-        model: 'providers',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'RESTRICT'
-    });
 
     await queryInterface.dropTable('catalog_provider');
   }
